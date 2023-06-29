@@ -1,0 +1,1582 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="utf-8">
+	<title>The AI Diagram: Multihead Attention</title>
+	<link rel="stylesheet" href="daigram.css">
+	<script src="./leader-line.min.js"></script>
+	<script src="./daigram.js"></script>
+	<script>
+		var maskIsEnabled = false;
+		function toggleMask(checkbox)
+		{
+			let checked = checkbox.checked;
+
+			if(checked)
+			{
+				maskIsEnabled = true;
+				document.getElementById('attention_word1_mask_passthrough_1').style.visibility = 'collapse';
+				document.getElementById('attention_word1_mask_passthrough_2').style.visibility = 'collapse';
+				document.getElementById('attention_word1_mask_1').style.visibility = 'visible';
+				document.getElementById('attention_word1_mask_2').style.visibility = 'visible';
+			}
+			else
+			{
+				maskIsEnabled = false;
+				document.getElementById('attention_word1_mask_passthrough_1').style.visibility = 'visible';
+				document.getElementById('attention_word1_mask_passthrough_2').style.visibility = 'visible';
+				document.getElementById('attention_word1_mask_1').style.visibility = 'collapse';
+				document.getElementById('attention_word1_mask_2').style.visibility = 'collapse';
+			}
+
+			resetResults();
+		}
+	</script>
+	<style>
+	</style>
+</head>
+<body style="padding: 12px;">
+
+<a-title>Multihead Attention</a-title>
+
+<br>
+<faint-span>Below is the diagram of cross-attention. In self-attention, source text and target text are the same.</faint-span><br>
+<faint-span>Computation flows from top (inputs) to bottom (output). Move mouse over any operation to compute the result.</faint-span><br>
+<br>
+
+<table>
+	<tr><td style="vertical-align: middle;"><tensor-value></tensor-value></td><td style="vertical-align: middle;"><a-text style="padding: 6px;">Input value</a-text></td></tr>
+	<tr><td style="vertical-align: middle;"><a-weight></a-weight></td><td style="vertical-align: middle;"><a-text style="padding: 6px;">Learnable weight/parameter</a-text></td></tr>
+	<tr><td style="vertical-align: middle;"><small-op><math-sum></math-sum></small-op></td><td style="vertical-align: middle;"><a-text style="padding: 6px;">Sum all inputs</a-text></td></tr>
+	<tr><td style="vertical-align: middle;"><small-op><math-mul></math-mul></small-op></td><td style="vertical-align: middle;"><a-text style="padding: 6px;">Multiply all inputs</a-text></td></tr>
+</table>
+
+<br>
+<hr>
+<br>
+
+<table><tr><td>
+
+	<no-op style="position: absolute; left: 500px; top: 2px;" id="Q_head2_middle_point">
+		<a-connection 
+			to="Q_head2"
+			start="right"
+			path="grid"
+			color="#da0"
+			dashed>
+		</a-connection>
+	</no-op>
+
+	<height-4></height-4>
+
+	<a-label>Source text</a-label>
+
+	<tensor-hat>
+		<a-connection to="Q_head2_middle_point" start="right" end="left" path="grid" color="#da0" dashed></a-connection>
+		<a-pack>
+			<a-label>Word 1</a-label>
+			<br>
+			<tensor-hat to-dim="Q_head1_weights">
+				<tensor-value value="0.1"></tensor-value>
+				<tensor-value value="0.2"></tensor-value>
+				<tensor-value value="0.3"></tensor-value>
+				<tensor-value value="0.4"></tensor-value>
+			</tensor-hat>
+		</a-pack>
+
+		<width-6></width-6>
+		
+		<a-pack>
+			<a-label>Word 2</a-label>
+			<br>
+			<tensor-hat to-dim="Q_head1_weights_2">
+				<tensor-value value="0.5"></tensor-value>
+				<tensor-value value="0.6"></tensor-value>
+				<tensor-value value="0.7"></tensor-value>
+				<tensor-value value="0.8"></tensor-value>
+			</tensor-hat>
+		</a-pack>
+	</tensor-hat>
+
+</td><td colspan="2">
+
+	<a-label>Target text</a-label>
+
+	<tensor-hat>
+		<a-connection to="K_head2, V_head2" start="right" path="grid" dashed></a-connection>
+
+		<a-column>
+			<a-label>Word 1</a-label>
+			<tensor-hat to-dim="K_head1_weights">
+				<a-connection to-dim="V_head1_weights" color="faint"></a-connection>
+				<tensor-value value="0.9"></tensor-value>
+				<tensor-value value="1.0"></tensor-value>
+				<tensor-value value="1.1"></tensor-value>
+				<tensor-value value="1.2"></tensor-value>
+			</tensor-hat>
+		</a-column>
+
+		<width-32></width-32>
+		<width-32></width-32>
+
+		<a-column>
+			<a-label>Word 2</a-label>
+			<tensor-hat to-dim="V_head1_weights_2">
+				<a-connection to-dim="K_head1_weights_2" color="faint"></a-connection>
+				<tensor-value value="1.3"></tensor-value>
+				<tensor-value value="1.4"></tensor-value>
+				<tensor-value value="1.5"></tensor-value>
+				<tensor-value value="1.6"></tensor-value>
+			</tensor-hat>
+		</a-column>
+	</tensor-hat>
+
+</td><td>
+
+<!-- Top right corner -->
+
+</td></tr><tr><td>
+
+	<height-2></height-2>
+
+	<a-box>
+		<an-overlay style="left: 5px;">
+			<a-text>
+				Q (head 1)
+			</a-text>
+		</an-overlay>
+
+		<height-4></height-4>
+
+		<tensor-dim to-dim="Q_head1_weights, Q_head1_weights_2">
+			<tensor-dim>
+				<a-weight value="0.1"></a-weight>
+				<a-weight value="0.2"></a-weight>
+				<a-weight value="0.3"></a-weight>
+				<a-weight value="0.4"></a-weight>
+			</tensor-dim>
+
+			<width-2></width-2>
+
+			<tensor-dim>
+				<a-weight value="0.5"></a-weight>
+				<a-weight value="0.6"></a-weight>
+				<a-weight value="0.7"></a-weight>
+				<a-weight value="0.8"></a-weight>
+			</tensor-dim>
+		</tensor-dim>
+		
+		<height-4></height-4>
+		
+		<tensor-dim id="Q_head1_weights" to-dim="Q_head1_word1_sum">
+			<tensor-dim>
+				<small-op><math-mul></math-mul></small-op>
+				<small-op><math-mul></math-mul></small-op>
+				<small-op><math-mul></math-mul></small-op>
+				<small-op><math-mul></math-mul></small-op>
+			</tensor-dim>
+
+			<width-2></width-2>
+
+			<tensor-dim>
+				<small-op><math-mul></math-mul></small-op>
+				<small-op><math-mul></math-mul></small-op>
+				<small-op><math-mul></math-mul></small-op>
+				<small-op><math-mul></math-mul></small-op>
+			</tensor-dim>
+		</tensor-dim>
+
+		<width-4></width-4>
+
+		<tensor-dim id="Q_head1_weights_2" to-dim="Q_head1_word2_sum">
+			<tensor-dim>
+				<small-op><math-mul></math-mul></small-op>
+				<small-op><math-mul></math-mul></small-op>
+				<small-op><math-mul></math-mul></small-op>
+				<small-op><math-mul></math-mul></small-op>
+			</tensor-dim>
+
+			<width-2></width-2>
+
+			<tensor-dim>
+				<small-op><math-mul></math-mul></small-op>
+				<small-op><math-mul></math-mul></small-op>
+				<small-op><math-mul></math-mul></small-op>
+				<small-op><math-mul></math-mul></small-op>
+			</tensor-dim>
+		</tensor-dim>
+
+		<height-4></height-4>
+
+		<a-pack>
+			<a-label>Word 1</a-label>
+			<tensor-hat id="Q_head1_word1_sum">
+				<a-connection to-dim="attention_word1_word1" squeeze></a-connection>
+				<a-connection to-dim="attention_word1_word2" squeeze dashed></a-connection>
+				<tensor-dim><math-op><math-sum></math-sum></math-op></tensor-dim>
+				<width-4></width-4>
+				<tensor-dim><math-op><math-sum></math-sum></math-op></tensor-dim>
+			</tensor-hat>
+		</a-pack>
+
+		<width-16></width-16>
+
+		<a-pack>
+			<a-label>Word 2</a-label>
+			<tensor-hat id="Q_head1_word2_sum">
+				<a-connection to-dim="attention_word2_word1" squeeze></a-connection>
+				<a-connection to-dim="attention_word2_word2" squeeze dashed></a-connection>
+				<tensor-dim><math-op><math-sum></math-sum></math-op></tensor-dim>
+				<width-4></width-4>
+				<tensor-dim><math-op><math-sum></math-sum></math-op></tensor-dim>
+			</tensor-hat>
+		</a-pack>
+
+	</a-box>
+
+</td><td>
+
+	<width-1></width-1>
+
+	<a-box>
+
+		<an-overlay style="left: 5px;">
+			<a-text>
+				K (head 1)
+			</a-text>
+		</an-overlay>
+
+		<height-4></height-4>
+
+		<tensor-dim to-dim="K_head1_weights, K_head1_weights_2">
+			<tensor-dim>
+				<a-weight value="1.7"></a-weight>
+				<a-weight value="1.8"></a-weight>
+				<a-weight value="1.9"></a-weight>
+				<a-weight value="2.0"></a-weight>
+			</tensor-dim>
+
+			<width-2></width-2>
+
+			<tensor-dim>
+				<a-weight value="2.1"></a-weight>
+				<a-weight value="2.2"></a-weight>
+				<a-weight value="2.3"></a-weight>
+				<a-weight value="2.4"></a-weight>
+			</tensor-dim>
+		</tensor-dim>
+
+		<height-4></height-4>
+
+		<tensor-dim id="K_head1_weights" to-dim="K_head1_word1_sum">
+			<tensor-dim>
+				<small-op><math-mul></math-mul></small-op>
+				<small-op><math-mul></math-mul></small-op>
+				<small-op><math-mul></math-mul></small-op>
+				<small-op><math-mul></math-mul></small-op>
+			</tensor-dim>
+
+			<width-2></width-2>
+
+			<tensor-dim>
+				<small-op><math-mul></math-mul></small-op>
+				<small-op><math-mul></math-mul></small-op>
+				<small-op><math-mul></math-mul></small-op>
+				<small-op><math-mul></math-mul></small-op>
+			</tensor-dim>
+		</tensor-dim>
+
+		<width-4></width-4>
+
+		<tensor-dim id="K_head1_weights_2" to-dim="K_head1_word2_sum">
+			<tensor-dim>
+				<small-op><math-mul></math-mul></small-op>
+				<small-op><math-mul></math-mul></small-op>
+				<small-op><math-mul></math-mul></small-op>
+				<small-op><math-mul></math-mul></small-op>
+			</tensor-dim>
+
+			<width-2></width-2>
+
+			<tensor-dim>
+				<small-op><math-mul></math-mul></small-op>
+				<small-op><math-mul></math-mul></small-op>
+				<small-op><math-mul></math-mul></small-op>
+				<small-op><math-mul></math-mul></small-op>
+			</tensor-dim>
+		</tensor-dim>
+
+		<height-4></height-4>
+
+		<a-pack>
+			<a-label>Word 1</a-label>
+			<tensor-hat id="K_head1_word1_sum">
+				<a-connection to-dim="attention_word1_word1, attention_word2_word1" color="#da0" squeeze></a-connection>
+				<tensor-dim><math-op><math-sum></math-sum></math-op></tensor-dim>
+				<width-4></width-4>
+				<tensor-dim><math-op><math-sum></math-sum></math-op></tensor-dim>
+			</tensor-hat>
+		</a-pack>
+
+		<width-16></width-16>
+
+		<a-pack>
+			<a-label>Word 2</a-label>
+			<tensor-hat id="K_head1_word2_sum">
+				<a-connection to-dim="attention_word1_word2, attention_word2_word2" color="#da0" squeeze dashed></a-connection>
+				<tensor-dim><math-op><math-sum></math-sum></math-op></tensor-dim>
+				<width-4></width-4>
+				<tensor-dim><math-op><math-sum></math-sum></math-op></tensor-dim>
+			</tensor-hat>
+		</a-pack>
+	
+	</a-box>
+
+</td><td>
+
+	<width-1></width-1>
+
+	<a-box>
+		<an-overlay style="right: 5px;">
+			<a-text>
+				V (head 1)
+			</a-text>
+		</an-overlay>
+
+		<height-4></height-4>
+
+		<tensor-dim to-dim="V_head1_weights, V_head1_weights_2">
+			<tensor-dim>
+				<a-weight value="3.3"></a-weight>
+				<a-weight value="3.4"></a-weight>
+				<a-weight value="3.5"></a-weight>
+				<a-weight value="3.6"></a-weight>
+			</tensor-dim>
+
+			<width-2></width-2>
+
+			<tensor-dim>
+				<a-weight value="3.7"></a-weight>
+				<a-weight value="3.8"></a-weight>
+				<a-weight value="3.9"></a-weight>
+				<a-weight value="4.0"></a-weight>
+			</tensor-dim>
+		</tensor-dim>
+
+		<height-4></height-4>
+
+		<tensor-dim id="V_head1_weights" to-dim="V_head1_word1_sum">
+			<tensor-dim>
+				<small-op><math-mul></math-mul></small-op>
+				<small-op><math-mul></math-mul></small-op>
+				<small-op><math-mul></math-mul></small-op>
+				<small-op><math-mul></math-mul></small-op>
+			</tensor-dim>
+
+			<width-2></width-2>
+
+			<tensor-dim>
+				<small-op><math-mul></math-mul></small-op>
+				<small-op><math-mul></math-mul></small-op>
+				<small-op><math-mul></math-mul></small-op>
+				<small-op><math-mul></math-mul></small-op>
+			</tensor-dim>
+		</tensor-dim>
+
+		<width-4></width-4>
+
+		<tensor-dim id="V_head1_weights_2" to-dim="V_head1_word2_sum">
+			<tensor-dim>
+				<small-op><math-mul></math-mul></small-op>
+				<small-op><math-mul></math-mul></small-op>
+				<small-op><math-mul></math-mul></small-op>
+				<small-op><math-mul></math-mul></small-op>
+			</tensor-dim>
+
+			<width-2></width-2>
+
+			<tensor-dim>
+				<small-op><math-mul></math-mul></small-op>
+				<small-op><math-mul></math-mul></small-op>
+				<small-op><math-mul></math-mul></small-op>
+				<small-op><math-mul></math-mul></small-op>
+			</tensor-dim>
+		</tensor-dim>
+
+		<height-4></height-4>
+
+		<a-pack>
+			<a-label>Word 1</a-label>
+			<tensor-hat id="V_head1_word1_sum">
+				<tensor-dim>
+					<math-op>
+						<a-connection to="V_head1_word1_component1" color="#ec8"></a-connection>
+						<math-sum></math-sum>
+					</math-op>
+				</tensor-dim>
+				<width-4></width-4>
+				<tensor-dim>
+					<math-op>
+						<a-connection to="V_head1_word1_component2" color="#ec8"></a-connection>
+						<math-sum></math-sum>
+					</math-op>
+				</tensor-dim>
+			</tensor-hat>
+		</a-pack>
+
+		<width-16></width-16>
+
+		<a-pack>
+			<a-label>Word 2</a-label>
+			<tensor-hat id="V_head1_word2_sum">
+				<tensor-dim>
+					<math-op>
+						<a-connection to="V_head1_word2_component1" color="#ec8"></a-connection>
+						<math-sum></math-sum>
+					</math-op>
+				</tensor-dim>
+				<width-4></width-4>
+				<tensor-dim>
+					<math-op>
+						<a-connection to="V_head1_word2_component2" color="#ec8"></a-connection>
+						<math-sum></math-sum>
+					</math-op>
+				</tensor-dim>
+			</tensor-hat>
+		</a-pack>
+
+	</a-box>
+
+</td><td>
+
+	<width-2></width-2>
+
+	<a-connection to="V_head2_select_box" dashed></a-connection>
+
+	<a-box id="Q_head2">
+
+		<mid-text>
+			Q (head 2)
+		</mid-text>
+
+		<height-1></height-1>
+
+		<mid-text><faint-span>
+			Connected exactly as head 1<br>with its own learned weights
+		</faint-span></mid-text>
+
+		<height-1></height-1>
+
+		<tensor-dim>
+			<tensor-dim>
+				<a-weight></a-weight>
+				<a-weight></a-weight>
+				<a-weight></a-weight>
+				<a-weight></a-weight>
+			</tensor-dim>
+
+			<width-1></width-1>
+
+			<tensor-dim>
+				<a-weight></a-weight>
+				<a-weight></a-weight>
+				<a-weight></a-weight>
+				<a-weight></a-weight>
+			</tensor-dim>
+		</tensor-dim>
+
+		<height-2></height-2>
+
+		<tensor-dim>
+			<tensor-dim>
+				<tiny-op><math-mul></math-mul></tiny-op>
+				<tiny-op><math-mul></math-mul></tiny-op>
+				<tiny-op><math-mul></math-mul></tiny-op>
+				<tiny-op><math-mul></math-mul></tiny-op>
+			</tensor-dim>
+			<tensor-dim>
+				<tiny-op><math-mul></math-mul></tiny-op>
+				<tiny-op><math-mul></math-mul></tiny-op>
+				<tiny-op><math-mul></math-mul></tiny-op>
+				<tiny-op><math-mul></math-mul></tiny-op>
+			</tensor-dim>
+		</tensor-dim>
+		<tensor-dim>
+			<tensor-dim>
+				<tiny-op><math-mul></math-mul></tiny-op>
+				<tiny-op><math-mul></math-mul></tiny-op>
+				<tiny-op><math-mul></math-mul></tiny-op>
+				<tiny-op><math-mul></math-mul></tiny-op>
+			</tensor-dim>
+			<tensor-dim>
+				<tiny-op><math-mul></math-mul></tiny-op>
+				<tiny-op><math-mul></math-mul></tiny-op>
+				<tiny-op><math-mul></math-mul></tiny-op>
+				<tiny-op><math-mul></math-mul></tiny-op>
+			</tensor-dim>
+		</tensor-dim>
+
+		<height-2></height-2>
+
+		<tensor-hat id="Q_head2_word1_sum">
+			<tensor-dim><math-op><math-sum></math-sum></math-op></tensor-dim>
+			<tensor-dim><math-op><math-sum></math-sum></math-op></tensor-dim>
+		</tensor-hat>
+
+		<tensor-hat id="Q_head2_word2_sum">
+			<tensor-dim><math-op><math-sum></math-sum></math-op></tensor-dim>
+			<tensor-dim><math-op><math-sum></math-sum></math-op></tensor-dim>
+		</tensor-hat>
+
+	</a-box>
+
+	<width-1></width-1>
+
+	<a-box id="K_head2">
+
+		<mid-text>
+			K (head 2)
+		</mid-text>
+
+		<height-2></height-2>
+
+		<tensor-dim>
+			<tensor-dim>
+				<a-weight></a-weight>
+				<a-weight></a-weight>
+				<a-weight></a-weight>
+				<a-weight></a-weight>
+			</tensor-dim>
+			
+			<width-1></width-1>
+
+			<tensor-dim>
+				<a-weight></a-weight>
+				<a-weight></a-weight>
+				<a-weight></a-weight>
+				<a-weight></a-weight>
+			</tensor-dim>
+		</tensor-dim>
+
+		<height-2></height-2>
+
+		<tensor-dim>
+			<tensor-dim>
+				<tiny-op><math-mul></math-mul></tiny-op>
+				<tiny-op><math-mul></math-mul></tiny-op>
+				<tiny-op><math-mul></math-mul></tiny-op>
+				<tiny-op><math-mul></math-mul></tiny-op>
+			</tensor-dim>
+			<tensor-dim>
+				<tiny-op><math-mul></math-mul></tiny-op>
+				<tiny-op><math-mul></math-mul></tiny-op>
+				<tiny-op><math-mul></math-mul></tiny-op>
+				<tiny-op><math-mul></math-mul></tiny-op>
+			</tensor-dim>
+		</tensor-dim>
+		<tensor-dim>
+			<tensor-dim>
+				<tiny-op><math-mul></math-mul></tiny-op>
+				<tiny-op><math-mul></math-mul></tiny-op>
+				<tiny-op><math-mul></math-mul></tiny-op>
+				<tiny-op><math-mul></math-mul></tiny-op>
+			</tensor-dim>
+			<tensor-dim>
+				<tiny-op><math-mul></math-mul></tiny-op>
+				<tiny-op><math-mul></math-mul></tiny-op>
+				<tiny-op><math-mul></math-mul></tiny-op>
+				<tiny-op><math-mul></math-mul></tiny-op>
+			</tensor-dim>
+		</tensor-dim>
+
+		<height-2></height-2>
+
+		<tensor-hat id="K_head2_word1_sum">
+			<tensor-dim><math-op><math-sum></math-sum></math-op></tensor-dim>
+			<tensor-dim><math-op><math-sum></math-sum></math-op></tensor-dim>
+		</tensor-hat>
+
+		<tensor-hat id="K_head2_word2_sum">
+			<tensor-dim><math-op><math-sum></math-sum></math-op></tensor-dim>
+			<tensor-dim><math-op><math-sum></math-sum></math-op></tensor-dim>
+		</tensor-hat>
+
+	</a-box>
+
+	<width-1></width-1>
+
+	<a-box id="V_head2">
+
+		<mid-text>
+			V (head 2)
+		</mid-text>
+
+		<height-2></height-2>
+
+		<tensor-dim>
+			<tensor-dim>
+				<a-weight></a-weight>
+				<a-weight></a-weight>
+				<a-weight></a-weight>
+				<a-weight></a-weight>
+			</tensor-dim>
+			
+			<width-1></width-1>
+
+			<tensor-dim>
+				<a-weight></a-weight>
+				<a-weight></a-weight>
+				<a-weight></a-weight>
+				<a-weight></a-weight>
+			</tensor-dim>
+		</tensor-dim>
+
+		<height-2></height-2>
+
+		<tensor-dim>
+			<tensor-dim>
+				<tiny-op><math-mul></math-mul></tiny-op>
+				<tiny-op><math-mul></math-mul></tiny-op>
+				<tiny-op><math-mul></math-mul></tiny-op>
+				<tiny-op><math-mul></math-mul></tiny-op>
+			</tensor-dim>
+			<tensor-dim>
+				<tiny-op><math-mul></math-mul></tiny-op>
+				<tiny-op><math-mul></math-mul></tiny-op>
+				<tiny-op><math-mul></math-mul></tiny-op>
+				<tiny-op><math-mul></math-mul></tiny-op>
+			</tensor-dim>
+		</tensor-dim>
+		<tensor-dim>
+			<tensor-dim>
+				<tiny-op><math-mul></math-mul></tiny-op>
+				<tiny-op><math-mul></math-mul></tiny-op>
+				<tiny-op><math-mul></math-mul></tiny-op>
+				<tiny-op><math-mul></math-mul></tiny-op>
+			</tensor-dim>
+			<tensor-dim>
+				<tiny-op><math-mul></math-mul></tiny-op>
+				<tiny-op><math-mul></math-mul></tiny-op>
+				<tiny-op><math-mul></math-mul></tiny-op>
+				<tiny-op><math-mul></math-mul></tiny-op>
+			</tensor-dim>
+		</tensor-dim>
+
+		<height-2></height-2>
+
+		<tensor-hat id="V_head2_word1_sum">
+			<tensor-dim><math-op><math-sum></math-sum></math-op></tensor-dim>
+			<tensor-dim><math-op><math-sum></math-sum></math-op></tensor-dim>
+		</tensor-hat>
+
+		<tensor-hat id="V_head2_word2_sum">
+			<tensor-dim><math-op><math-sum></math-sum></math-op></tensor-dim>
+			<tensor-dim><math-op><math-sum></math-sum></math-op></tensor-dim>
+		</tensor-hat>
+
+	</a-box>
+
+</td></tr><tr><td colspan="2">
+
+	<height-2></height-2>
+
+	<a-box style="display: block;">
+
+		<an-overlay style="left: 5px; width: 180px;">
+			<a-text>
+				Attention score<br>
+				<br>
+				<br>
+				<faint-span>
+					Every source word's component is multiplied (= compared) with every target word's component.<br>
+					<br>
+					Then components are summed in a simple score.<br>
+					<br>
+					(Notice where
+					<a href="#"
+						onclick="return false;"
+						onmouseover="document.getElementById('attention_word3_ghost').style.visibility = 'visible';"
+						onmouseout="document.getElementById('attention_word3_ghost').style.visibility = 'hidden';">
+						source text's 3rd word</a>
+					vs
+					<a href="#"
+						onclick="return false;"
+						onmouseover="document.getElementById('attention_word1_word3_ghost').style.display = 'inline-block'; document.getElementById('attention_word1_word3_ghost_filler').style.display = 'none'; document.getElementById('attention_word2_word3_ghost').style.display = 'inline-block'; document.getElementById('attention_word2_word3_ghost_filler').style.display = 'none';"
+						onmouseout="document.getElementById('attention_word1_word3_ghost').style.display = 'none'; document.getElementById('attention_word1_word3_ghost_filler').style.display = 'inline-block'; document.getElementById('attention_word2_word3_ghost').style.display = 'none'; document.getElementById('attention_word2_word3_ghost_filler').style.display = 'inline-block';">
+						target text's 3rd word</a>
+					would be)<br>
+				</faint-span>
+			</a-text>
+		</an-overlay>
+
+		<a-pack style="margin-left: 60px;">
+
+			<height-16></height-16>
+
+			<tensor-dim>
+				<tensor-dim id="attention_word1_word1" to-dim="attention_word1_word1_sum">
+					<math-op><math-mul></math-mul></math-op>
+					<math-op><math-mul></math-mul></math-op>
+				</tensor-dim>
+
+				<width-1></width-1>
+
+				<tensor-dim id="attention_word1_word2" to-dim="attention_word1_word2_sum">
+					<math-op><math-mul></math-mul></math-op>
+					<math-op><math-mul></math-mul></math-op>
+				</tensor-dim>
+			</tensor-dim>
+
+			<width-2></width-2>
+
+			<tensor-dim>
+				<tensor-dim id="attention_word2_word1" to-dim="attention_word2_word1_sum">
+					<math-op><math-mul></math-mul></math-op>
+					<math-op><math-mul></math-mul></math-op>
+				</tensor-dim>
+
+				<width-1></width-1>
+
+				<tensor-dim id="attention_word2_word2" to-dim="attention_word2_word2_sum">
+					<math-op><math-mul></math-mul></math-op>
+					<math-op><math-mul></math-mul></math-op>
+				</tensor-dim>
+			</tensor-dim>
+		
+			<height-2></height-2>
+
+			<width-32></width-32>
+
+			<tensor-dim to-dim="attention_word1_scaled">
+				<tensor-hat>
+					<math-op id="attention_word1_word1_sum">
+						<math-sum></math-sum>
+					</math-op>
+
+					<width-2></width-2>
+
+					<math-op id="attention_word1_word2_sum">
+						<math-sum></math-sum>
+					</math-op>
+
+					<div style="display: none;" id="attention_word1_word3_ghost">
+						<width-2></width-2>
+						<ghost-op><math-sum></math-sum></ghost-op>
+					</div>
+				</tensor-hat>
+
+				<div style="display: inline-block; visibility: hidden;" id="attention_word1_word3_ghost_filler">
+					<width-2></width-2>
+					<ghost-op><math-sum></math-sum></ghost-op>
+				</div>
+			</tensor-dim>
+		
+			<width-4></width-4>
+
+			<tensor-dim to-dim="attention_word2_scaled">
+				<tensor-hat>
+					<math-op id="attention_word2_word1_sum">
+						<math-sum></math-sum>
+					</math-op>
+
+					<width-2></width-2>
+
+					<math-op id="attention_word2_word2_sum">
+						<math-sum></math-sum>
+					</math-op>
+
+					<div style="display: none;" id="attention_word2_word3_ghost">
+						<width-2></width-2>
+						<ghost-op><math-sum></math-sum></ghost-op>
+					</div>
+				</tensor-hat>
+
+				<div style="display: inline-block; visibility: hidden;" id="attention_word2_word3_ghost_filler">
+					<width-2></width-2>
+					<ghost-op><math-sum></math-sum></ghost-op>
+				</div>
+			</tensor-dim>
+		
+			<width-8></width-8>
+
+			<ghost-hat style="visibility: hidden;" id="attention_word3_ghost">
+				<ghost-op><math-sum></math-sum></ghost-op>
+				<width-2></width-2>
+				<ghost-op><math-sum></math-sum></ghost-op>
+			</ghost-hat>
+
+		</a-pack>
+	</a-box>
+
+	<height-2></height-2>
+
+	<a-box style="display: block;">
+
+		<an-overlay style="left: 5px; width: 160px;">
+			<a-text>
+				Scale<br>
+				<br>
+				<faint-span>Divided by the square root of the size of the input (which is the number of words in the <strong>target</strong> text = 2).</faint-span>
+			</a-text>
+		</an-overlay>
+
+		<height-2></height-2>
+
+		<a-pack style="margin-left: 160px;">
+
+			<tensor-dim id="attention_word1_scaled" to-dim="attention_word1_mask">
+
+				<math-op output="x/Math.sqrt(2)" style="color: #a0c; padding: 0px 8px 4px 8px;">
+					<div style="border-bottom: 2px solid; padding-bottom: 2px;">&nbsp;<span style="color: #fbe;">x</span>&nbsp;</div><div style="padding-top: 4px;">√<span style="font-weight: normal;">2</span>&nbsp;</div>
+				</math-op>
+
+				<math-op output="x/Math.sqrt(2)" style="color: #a0c; padding: 0px 8px 4px 8px;">
+					<div style="border-bottom: 2px solid; padding-bottom: 2px;">&nbsp;<span style="color: #fbe;">x</span>&nbsp;</div><div style="padding-top: 4px;">√<span style="font-weight: normal;">2</span>&nbsp;</div>
+				</math-op>
+
+			</tensor-dim>
+
+			<width-16></width-16>
+
+			<tensor-dim id="attention_word2_scaled" to-dim="attention_word2_mask">
+
+				<math-op output="x/Math.sqrt(2)" style="color: #a0c; padding: 0px 8px 4px 8px;">
+					<div style="border-bottom: 2px solid; padding-bottom: 2px;">&nbsp;<span style="color: #fbe;">x</span>&nbsp;</div><div style="padding-top: 4px;">√<span style="font-weight: normal;">2</span>&nbsp;</div>
+				</math-op>
+
+				<math-op output="x/Math.sqrt(2)" style="color: #a0c; padding: 0px 8px 4px 8px;">
+					<div style="border-bottom: 2px solid; padding-bottom: 2px;">&nbsp;<span style="color: #fbe;">x</span>&nbsp;</div><div style="padding-top: 4px;">√<span style="font-weight: normal;">2</span>&nbsp;</div>
+				</math-op>
+
+			</tensor-dim>
+
+		</a-pack>
+
+		<height-2></height-2>
+
+	</a-box>
+
+	<height-2></height-2>
+
+	<a-box style="display: block;">
+
+		<an-overlay style="left: 5px; width: 160px;">
+			<a-text>
+				Mask (optional)<br>
+				<br>
+				<div style="display: inline-block; border: 3px dashed #bca;">
+					<input type="checkbox" onclick="toggleMask(this);" id="MaskCheckbox" style="display: inline-block; vertical-align: middle; margin: 10px; margin-right: 0;"><label style="display: inline-block; vertical-align: middle; padding: 10px;" for="MaskCheckbox">Mask Word 2</label>
+				</div>
+			</a-text>
+		</an-overlay>
+
+		<height-3></height-3>
+
+		<a-pack style="margin-left: 160px;">
+
+			<tensor-dim id="attention_word1_mask" to-dim="attention_word1_softmax_ex">
+
+				<math-op output="x" style="position: relative;">
+					<an-overlay style="left: 50%; height: 100%; width: 0; border-left: 1px solid #aaa;"></an-overlay>
+					<div style="padding: 0px 6px 4px 6px; visibility: collapse;">
+						<div>┴</div>
+						<div style="font-weight: normal; font-size: 12px;">-inf</div>
+					</div>
+				</math-op>
+
+				<math-op output="maskIsEnabled ? -Infinity : x" style="position: relative;">
+					<an-overlay id="attention_word1_mask_passthrough_1" style="left: 50%; height: 100%; width: 0; border-left: 1px solid #aaa;"></an-overlay>
+					<div id="attention_word1_mask_1" style="padding: 0px 6px 4px 6px; visibility: collapse;">
+						<div>┴</div>
+						<div style="font-weight: normal; font-size: 12px;">-inf</div>
+					</div>
+				</math-op>
+
+			</tensor-dim>
+
+			<width-16></width-16>
+			<width-1></width-1>
+
+			<tensor-dim id="attention_word2_mask" to-dim="attention_word2_softmax_ex">
+
+				<math-op output="x" style="position: relative;">
+					<an-overlay style="left: 50%; height: 100%; width: 0; border-left: 1px solid #aaa;"></an-overlay>
+					<div style="padding: 0px 6px 4px 6px; visibility: collapse;">
+						<div>┴</div>
+						<div style="font-weight: normal; font-size: 12px;">-inf</div>
+					</div>
+				</math-op>
+
+				<math-op output="maskIsEnabled ? -Infinity : x" style="position: relative;">
+					<an-overlay id="attention_word1_mask_passthrough_2" style="left: 50%; height: 100%; width: 0; border-left: 1px solid #aaa;"></an-overlay>
+					<div id="attention_word1_mask_2" style="padding: 0px 6px 4px 6px; visibility: collapse;">
+						<div>┴</div>
+						<div style="font-weight: normal; font-size: 12px;">-inf</div>
+					</div>
+				</math-op>
+
+			</tensor-dim>
+
+		</a-pack>
+
+		<height-3></height-3>
+
+	</a-box>
+
+	<height-2></height-2>
+
+	<a-box style="display: block;">
+
+		<an-overlay style="left: 5px; width: 160px;">
+			<a-text>
+				Softmax<br>
+				<br>
+				<faint-span>
+				Converts inputs to probabilities where each output is positive (0..1) and sum of all outputs is 1.<br><br>
+				e<sup>x</sup> gives a divider != 0 (unless all inputs are negative infinity)<br><br>
+				e = 2.718281828459045…<br>
+				</faint-span>
+				</a-text>
+		</an-overlay>
+
+		<a-pack style="margin-left: 200px;">
+
+			<height-1></height-1>
+
+			<a-pack>
+			
+				<tensor-dim id="attention_word1_softmax_ex">
+					<tensor-dim to-dim="attention_word1_softmax_sum">
+						<math-op output="Math.exp(x)" style="padding: 2px 6px;">
+							<a-connection to="attention_word1_softmax_div_1" start="left" end="left" end-label="x" path="grid"></a-connection>
+							e<sup>x</sup>
+						</math-op>
+						<math-op output="Math.exp(x)" style="padding: 2px 6px;">
+							<a-connection to="attention_word1_softmax_div_2" start="right" end="right" end-label="x" path="grid"></a-connection>
+							e<sup>x</sup>
+						</math-op>
+					</tensor-dim>
+				</tensor-dim>
+
+				<height-2></height-2>
+
+				<math-op id="attention_word1_softmax_sum">
+					<a-connection to="attention_word1_softmax_div_1" end="right" end-label="y"></a-connection>
+					<a-connection to="attention_word1_softmax_div_2" end="left" end-label="y"></a-connection>
+					<math-sum></math-sum>
+				</math-op>
+				
+				<height-2></height-2>
+
+				<tensor-dim>
+					<tensor-dim>
+						<math-op output="x/y" to-dim="V_head1_select_part1" id="attention_word1_softmax_div_1" style="color: #a0c; padding: 0px 8px 4px 8px;">
+							<div style="border-bottom: 2px solid; padding-bottom: 2px;">&nbsp;<span style="color: #fbe;">x</span>&nbsp;</div><div>&nbsp;<span style="color: #fbe;">y</span>&nbsp;</div>
+						</math-op>
+						
+						<width-6></width-6>
+
+						<math-op output="x/y" to-dim="V_head1_select_part2" id="attention_word1_softmax_div_2" style="color: #a0c; padding: 0px 8px 4px 8px;">
+							<div style="border-bottom: 2px solid; padding-bottom: 2px;">&nbsp;<span style="color: #fbe;">x</span>&nbsp;</div><div>&nbsp;<span style="color: #fbe;">y</span>&nbsp;</div>
+						</math-op>
+					</tensor-dim>
+				</tensor-dim>
+
+			</a-pack>
+
+			<width-16></width-16>
+
+			<a-pack>
+
+				<tensor-dim id="attention_word2_softmax_ex">
+					<tensor-dim to-dim="attention_word2_softmax_sum">
+						<math-op output="Math.exp(x)" style="padding: 2px 6px;">
+							<a-connection to="attention_word2_softmax_div_1" start="left" end="left" end-label="x" path="grid"></a-connection>
+							e<sup>x</sup>
+						</math-op>
+						<math-op output="Math.exp(x)" style="padding: 2px 6px;">
+							<a-connection to="attention_word2_softmax_div_2" start="right" end="right" end-label="x" path="grid"></a-connection>
+							e<sup>x</sup>
+						</math-op>
+					</tensor-dim>
+				</tensor-dim>
+
+				<height-2></height-2>
+
+				<math-op id="attention_word2_softmax_sum">
+					<a-connection to="attention_word2_softmax_div_1" end="right" end-label="y"></a-connection>
+					<a-connection to="attention_word2_softmax_div_2" end="left" end-label="y"></a-connection>
+					<math-sum></math-sum>
+				</math-op>
+
+				<height-2></height-2>
+
+				<tensor-dim>
+					<tensor-dim>
+						<math-op output="x/y" id="attention_word2_softmax_div_1" style="color: #a0c; padding: 0px 8px 4px 8px;">
+							<a-connection to-dim="V_head1_select_part3" color="light" dashed></a-connection>
+							<div style="border-bottom: 2px solid; padding-bottom: 2px;">&nbsp;<span style="color: #fbe;">x</span>&nbsp;</div><div>&nbsp;<span style="color: #fbe;">y</span>&nbsp;</div>
+						</math-op>
+
+						<width-6></width-6>
+
+						<math-op output="x/y" id="attention_word2_softmax_div_2" style="color: #a0c; padding: 0px 8px 4px 8px;">
+							<a-connection to-dim="V_head1_select_part4" color="light" dashed></a-connection>
+							<div style="border-bottom: 2px solid; padding-bottom: 2px;">&nbsp;<span style="color: #fbe;">x</span>&nbsp;</div><div>&nbsp;<span style="color: #fbe;">y</span>&nbsp;</div>
+						</math-op>
+					</tensor-dim>
+				</tensor-dim>
+
+			</a-pack>
+
+		</a-pack>
+
+	</a-box>
+
+</td><td style="text-align: left;">
+
+	<tensor-dim>
+		<a-connection to-dim="V_head1_select_1" color="#da0"></a-connection>
+		<a-connection to-dim="V_head1_select_2" color="#da0" dashed></a-connection>
+		<a-row>
+			<tensor-dim>
+				<a-column style="width: 42px;">
+					<tensor-dim id="V_head1_word1_component1"></tensor-dim>
+				</a-column>
+				<a-column style="width: 42px;">
+					<tensor-dim id="V_head1_word1_component2"></tensor-dim>
+				</a-column>
+			</tensor-dim>
+			<tensor-dim>
+				<a-column style="width: 18px;"></a-column>
+				<a-column style="width: 42px;">
+					<tensor-dim id="V_head1_word2_component1"></tensor-dim>
+				</a-column>
+				<a-column style="width: 42px;">
+					<tensor-dim id="V_head1_word2_component2"></tensor-dim>
+				</a-column>
+			</tensor-dim>
+		</a-row>
+	</tensor-dim>
+
+	<height-4></height-4>
+
+</td><td>
+
+	<!-- Space under head 2 -->
+
+</td></tr><tr><td colspan="4" style="text-align: left;">
+
+	<height-2></height-2>
+
+	<a-box style="text-align: center;">
+
+		<an-overlay style="left: 5px; width: 260px;">
+			<a-text>
+				Select V word(s)<br><br>
+				<faint-span>
+					Softmax often outputs high probability for one input.<br><br>
+					If one word has a high probablity, then the result will be mostly that word's components (with small noise added by other words).
+				</faint-span>
+			</a-text>
+		</an-overlay>
+
+		<height-16></height-16>
+		
+		<a-pack style="margin-left: 440px; margin-right: 120px;">
+
+			<tensor-dim id="V_head1_select" to-dim="V_head1_select_sum">
+				<tensor-dim id="V_head1_select_1">
+					<tensor-dim id="V_head1_select_part1">
+						<math-op><math-mul></math-mul></math-op>
+						<math-op><math-mul></math-mul></math-op>
+					</tensor-dim>
+
+					<width-4></width-4>
+
+					<tensor-dim id="V_head1_select_part2">
+						<math-op><math-mul></math-mul></math-op>
+						<math-op><math-mul></math-mul></math-op>
+					</tensor-dim>
+				</tensor-dim>
+		
+				<width-8></width-8>
+
+				<tensor-dim id="V_head1_select_2">
+					<tensor-dim id="V_head1_select_part3">
+						<math-op><math-mul></math-mul></math-op>
+						<math-op><math-mul></math-mul></math-op>
+					</tensor-dim>
+
+					<width-4></width-4>
+
+					<tensor-dim id="V_head1_select_part4">
+						<math-op><math-mul></math-mul></math-op>
+						<math-op><math-mul></math-mul></math-op>
+					</tensor-dim>
+				</tensor-dim>
+			</tensor-dim>
+
+			<height-2></height-2>
+		
+			<tensor-dim id="V_head1_select_sum">
+				<tensor-hat>
+					<math-op>
+						<a-connection to="concat_head1_attword1_component1_mid" path="grid" end="right"></a-connection>
+						<math-sum></math-sum>
+					</math-op>
+					<width-4></width-4>
+					<math-op>
+						<a-connection to="concat_head1_attword1_component2_mid" path="grid" end="right"></a-connection>
+						<math-sum></math-sum>
+					</math-op>
+				</tensor-hat>
+			
+				<width-16></width-16>
+
+				<tensor-hat>
+					<math-op>
+						<a-connection to="concat_head1_attword2_component1_mid" path="grid" end="right" dashed></a-connection>
+						<math-sum></math-sum>
+					</math-op>
+					<width-4></width-4>
+					<math-op>
+						<a-connection to="concat_head1_attword2_component2_mid" path="grid" end="right" dashed></a-connection>
+						<math-sum></math-sum>
+					</math-op>
+				</tensor-hat>
+			</tensor-dim>
+
+		</a-pack>
+
+	</a-box>
+
+	<width-2></width-2>
+
+	<a-box id="V_head2_select_box">
+
+		<an-overlay style="left: 5px;">
+			<a-text>
+				Select V word(s) (head 2)<br><br>
+				<faint-span>
+					Connected exactly as head 1
+				</faint-span>
+			</a-text>
+		</an-overlay>
+
+		<height-16></height-16>
+		
+		<in-mid>
+
+			<width-1></width-1>
+
+			<tensor-dim id="V_head2_select" to-dim="V_head2_select_sum">
+				<tensor-dim id="V_head2_select_1">
+					<tensor-dim id="V_head2_select_part1">
+						<math-op><math-mul></math-mul></math-op>
+						<math-op><math-mul></math-mul></math-op>
+					</tensor-dim>
+
+					<width-4></width-4>
+
+					<tensor-dim id="V_head2_select_part2">
+						<math-op><math-mul></math-mul></math-op>
+						<math-op><math-mul></math-mul></math-op>
+					</tensor-dim>
+				</tensor-dim>
+		
+				<width-8></width-8>
+
+				<tensor-dim id="V_head2_select_2">
+					<tensor-dim id="V_head2_select_part3">
+						<math-op><math-mul></math-mul></math-op>
+						<math-op><math-mul></math-mul></math-op>
+					</tensor-dim>
+
+					<width-4></width-4>
+
+					<tensor-dim id="V_head2_select_part4">
+						<math-op><math-mul></math-mul></math-op>
+						<math-op><math-mul></math-mul></math-op>
+					</tensor-dim>
+				</tensor-dim>
+			</tensor-dim>
+
+			<width-1></width-1>
+
+			<height-2></height-2>
+		
+			<tensor-dim id="V_head2_select_sum">
+				<tensor-hat>
+					<math-op value="maskIsEnabled ? 17.9 : 24.6986">
+						<a-connection to="concat_head2_attword1_component1_mid" path="grid" end="right" color="#da0"></a-connection>
+						<math-sum></math-sum>
+					</math-op>
+					<width-4></width-4>
+					<math-op value="maskIsEnabled ? 19.58 : 27.0184">
+						<a-connection to="concat_head2_attword1_component2_mid" path="grid" end="right" color="#da0"></a-connection>
+						<math-sum></math-sum>
+					</math-op>
+				</tensor-hat>
+			
+				<width-16></width-16>
+
+				<tensor-hat>
+					<math-op value="maskIsEnabled ? 17.9 : 24.7">
+						<a-connection to="concat_head2_attword2_component1_mid" path="grid" end="right" color="#da0" dashed></a-connection>
+						<math-sum></math-sum>
+					</math-op>
+					<width-4></width-4>
+					<math-op value="maskIsEnabled ? 19.58 : 27.02">
+						<a-connection to="concat_head2_attword2_component2_mid" path="grid" end="right" color="#da0" dashed></a-connection>
+						<math-sum></math-sum>
+					</math-op>
+				</tensor-hat>
+			</tensor-dim>
+
+		</in-mid>
+
+	</a-box>
+
+
+</td></tr><tr><td colspan="3" style="text-align: left;">
+
+	<height-2></height-2>
+
+	<a-box style="text-align: center;">
+
+		<an-overlay style="left: 5px;">
+			<a-text>
+				Concatenate heads
+			</a-text>
+		</an-overlay>
+
+		<height-16></height-16>
+		<height-2></height-2>
+
+		<a-pack style="margin-left: 240px; margin-right: 85px;">
+
+			<a-pack>
+				<a-label>Attended word 1</a-label>
+				<br>
+				<tensor-hat>
+					<a-connection to-dim="final_weights_mul_1_part1" color="#888"></a-connection>
+					<a-connection to-dim="final_weights_mul_1_part2" color="#da0"></a-connection>
+					<a-connection to-dim="final_weights_mul_1_part3" color="#ec8"></a-connection>
+					<a-connection to-dim="final_weights_mul_1_part4" color="light"></a-connection>
+					<a-pack>
+						<a-label>Head 1</a-label>
+						<br>
+						<tensor-hat ignore>
+							<div style="display: inline-block; position: relative; height: 32px; width: 32px;">
+								<an-overlay style="top: -140px;" id="concat_head1_attword1_component1_mid">
+									<a-connection to="concat_head1_attword1_component1"></a-connection>
+								</an-overlay>
+								<no-op id="concat_head1_attword1_component1" style="position: absolute; bottom: 0px;"></no-op>
+							</div>
+							<width-4></width-4>
+							<div style="display: inline-block; position: relative; height: 32px; width: 32px;">
+								<an-overlay style="top: -130px;" id="concat_head1_attword1_component2_mid">
+									<a-connection to="concat_head1_attword1_component2"></a-connection>
+								</an-overlay>
+								<no-op id="concat_head1_attword1_component2" style="position: absolute; bottom: 0px;"></no-op>
+							</div>
+						</tensor-hat>
+					</a-pack>
+
+					<width-8></width-8>
+
+					<a-pack>
+						<a-label>Head 2</a-label>
+						<br>
+						<tensor-hat ignore>
+							<div style="display: inline-block; position: relative; height: 32px; width: 32px;">
+								<an-overlay style="top: -110px;" id="concat_head2_attword1_component1_mid">
+									<a-connection to="concat_head2_attword1_component1" color="#da0"></a-connection>
+								</an-overlay>
+								<no-op id="concat_head2_attword1_component1" style="position: absolute; bottom: 0px;"></no-op>
+							</div>
+							<width-4></width-4>
+							<div style="display: inline-block; position: relative; height: 32px; width: 32px;">
+								<an-overlay style="top: -100px;" id="concat_head2_attword1_component2_mid">
+									<a-connection to="concat_head2_attword1_component2" color="#da0"></a-connection>
+								</an-overlay>
+								<no-op id="concat_head2_attword1_component2" style="position: absolute; bottom: 0px;"></no-op>
+							</div>
+						</tensor-hat>
+					</a-pack>
+				</tensor-hat>
+			</a-pack>
+
+			<width-16></width-16>
+
+			<a-pack>
+				<a-label>Attended word 2</a-label>
+				<br>
+				<tensor-hat>
+					<a-connection to-dim="final_weights_mul_2" dashed></a-connection>
+					<a-pack>
+						<a-label>Head 1</a-label>
+						<br>
+						<tensor-hat ignore>
+							<div style="display: inline-block; position: relative; height: 32px; width: 32px;">
+								<an-overlay style="top: -80px;" id="concat_head1_attword2_component1_mid">
+									<a-connection to="concat_head1_attword2_component1" dashed></a-connection>
+								</an-overlay>
+								<no-op id="concat_head1_attword2_component1" style="position: absolute; bottom: 0px;"></no-op>
+							</div>
+							<width-4></width-4>
+							<div style="display: inline-block; position: relative; height: 32px; width: 32px;">
+								<an-overlay style="top: -70px;" id="concat_head1_attword2_component2_mid">
+									<a-connection to="concat_head1_attword2_component2" dashed></a-connection>
+								</an-overlay>
+								<no-op id="concat_head1_attword2_component2" style="position: absolute; bottom: 0px;"></no-op>
+							</div>
+						</tensor-hat>
+					</a-pack>
+
+					<width-8></width-8>
+
+					<a-pack>
+						<a-label>Head 2</a-label>
+						<br>
+						<tensor-hat ignore>
+							<div style="display: inline-block; position: relative; height: 32px; width: 32px;">
+								<an-overlay style="top: -50px;" id="concat_head2_attword2_component1_mid">
+									<a-connection to="concat_head2_attword2_component1" color="#da0" dashed></a-connection>
+								</an-overlay>
+								<no-op id="concat_head2_attword2_component1" style="position: absolute; bottom: 0px;"></no-op>
+							</div>
+							<width-4></width-4>
+							<div style="display: inline-block; position: relative; height: 32px; width: 32px;">
+								<an-overlay style="top: -40px;" id="concat_head2_attword2_component2_mid">
+									<a-connection to="concat_head2_attword2_component2" color="#da0" dashed></a-connection>
+								</an-overlay>
+								<no-op id="concat_head2_attword2_component2" style="position: absolute; bottom: 0px;"></no-op>
+							</div>
+						</tensor-hat>
+					</a-pack>
+				</tensor-hat>
+			</a-pack>
+
+
+		</a-pack>
+
+
+	</a-box>
+
+
+</td><td></td></tr><tr><td colspan="4" style="text-align: left;">
+
+	<height-2></height-2>
+
+	<a-box style="text-align: center;">
+		<an-overlay style="left: 5px;">
+			<a-text>
+				Final layer
+			</a-text>
+		</an-overlay>
+
+		<height-4></height-4>
+
+		<a-pack style="margin-left: 180px; margin-right: 25px;">
+
+			<tensor-dim to-dim="final_weights_mul_1, final_weights_mul_2">
+				<tensor-dim>
+					<a-weight value="0.1"></a-weight>
+					<a-weight value="0.2"></a-weight>
+					<a-weight value="0.3"></a-weight>
+					<a-weight value="0.4"></a-weight>
+				</tensor-dim>
+
+				<width-2></width-2>
+
+				<tensor-dim>
+					<a-weight value="0.5"></a-weight>
+					<a-weight value="0.6"></a-weight>
+					<a-weight value="0.7"></a-weight>
+					<a-weight value="0.8"></a-weight>
+				</tensor-dim>
+
+				<width-2></width-2>
+
+				<tensor-dim>
+					<a-weight value="0.9"></a-weight>
+					<a-weight value="1.0"></a-weight>
+					<a-weight value="1.1"></a-weight>
+					<a-weight value="1.2"></a-weight>
+				</tensor-dim>
+
+				<width-2></width-2>
+
+				<tensor-dim>
+					<a-weight value="1.3"></a-weight>
+					<a-weight value="1.4"></a-weight>
+					<a-weight value="1.5"></a-weight>
+					<a-weight value="1.6"></a-weight>
+				</tensor-dim>
+			</tensor-dim>
+			
+			<height-8></height-8>
+			
+			<tensor-dim id="final_weights_mul_1" to-dim="final_sum_1">
+				<tensor-dim id="final_weights_mul_1_part1">
+					<small-op><math-mul></math-mul></small-op>
+					<small-op><math-mul></math-mul></small-op>
+					<small-op><math-mul></math-mul></small-op>
+					<small-op><math-mul></math-mul></small-op>
+				</tensor-dim>
+
+				<width-2></width-2>
+
+				<tensor-dim id="final_weights_mul_1_part2">
+					<small-op><math-mul></math-mul></small-op>
+					<small-op><math-mul></math-mul></small-op>
+					<small-op><math-mul></math-mul></small-op>
+					<small-op><math-mul></math-mul></small-op>
+				</tensor-dim>
+
+				<width-2></width-2>
+
+				<tensor-dim id="final_weights_mul_1_part3">
+					<small-op><math-mul></math-mul></small-op>
+					<small-op><math-mul></math-mul></small-op>
+					<small-op><math-mul></math-mul></small-op>
+					<small-op><math-mul></math-mul></small-op>
+				</tensor-dim>
+
+				<width-2></width-2>
+
+				<tensor-dim id="final_weights_mul_1_part4">
+					<small-op><math-mul></math-mul></small-op>
+					<small-op><math-mul></math-mul></small-op>
+					<small-op><math-mul></math-mul></small-op>
+					<small-op><math-mul></math-mul></small-op>
+				</tensor-dim>
+			</tensor-dim>
+
+			<width-4></width-4>
+
+			<tensor-dim id="final_weights_mul_2" to-dim="final_sum_2">
+				<tensor-dim id="final_weights_mul_2_part1">
+					<small-op><math-mul></math-mul></small-op>
+					<small-op><math-mul></math-mul></small-op>
+					<small-op><math-mul></math-mul></small-op>
+					<small-op><math-mul></math-mul></small-op>
+				</tensor-dim>
+
+				<width-2></width-2>
+
+				<tensor-dim id="final_weights_mul_2_part2">
+					<small-op><math-mul></math-mul></small-op>
+					<small-op><math-mul></math-mul></small-op>
+					<small-op><math-mul></math-mul></small-op>
+					<small-op><math-mul></math-mul></small-op>
+				</tensor-dim>
+
+				<width-2></width-2>
+
+				<tensor-dim id="final_weights_mul_2_part3">
+					<small-op><math-mul></math-mul></small-op>
+					<small-op><math-mul></math-mul></small-op>
+					<small-op><math-mul></math-mul></small-op>
+					<small-op><math-mul></math-mul></small-op>
+				</tensor-dim>
+
+				<width-2></width-2>
+
+				<tensor-dim id="final_weights_mul_2_part4">
+					<small-op><math-mul></math-mul></small-op>
+					<small-op><math-mul></math-mul></small-op>
+					<small-op><math-mul></math-mul></small-op>
+					<small-op><math-mul></math-mul></small-op>
+				</tensor-dim>
+			</tensor-dim>
+
+			<height-4></height-4>
+
+			<a-pack>
+				<a-label>Word 1</a-label>
+				<tensor-hat id="final_sum_1">
+					<tensor-dim><math-op><math-sum></math-sum></math-op></tensor-dim>
+					<width-4></width-4>
+					<tensor-dim><math-op><math-sum></math-sum></math-op></tensor-dim>
+					<width-4></width-4>
+					<tensor-dim><math-op><math-sum></math-sum></math-op></tensor-dim>
+					<width-4></width-4>
+					<tensor-dim><math-op><math-sum></math-sum></math-op></tensor-dim>
+				</tensor-hat>
+			</a-pack>
+
+			<width-16></width-16>
+
+			<a-pack>
+				<a-label>Word 2</a-label>
+				<tensor-hat id="final_sum_2">
+					<tensor-dim><math-op><math-sum></math-sum></math-op></tensor-dim>
+					<width-4></width-4>
+					<tensor-dim><math-op><math-sum></math-sum></math-op></tensor-dim>
+					<width-4></width-4>
+					<tensor-dim><math-op><math-sum></math-sum></math-op></tensor-dim>
+					<width-4></width-4>
+					<tensor-dim><math-op><math-sum></math-sum></math-op></tensor-dim>
+				</tensor-hat>
+			</a-pack>
+
+		</a-pack>
+
+	</a-box>
+
+</td></tr></table>
+
+<br>
+<br>
+
+<a-title>PyTorch code</a-title>
+
+<pre>
+import torch
+import torch.nn as nn
+import torch.nn.functional as F
+from torch import tensor
+import math
+
+def arange2d(w, h):
+    return (torch.arange(0, h)*w).unsqueeze(1) + torch.arange(1, w+1)
+
+embed_dim = 4
+num_heads = 2
+
+multihead_attn = nn.MultiheadAttention(embed_dim, num_heads, bias=False)
+
+# Weights to match computation in the diagram:
+multihead_attn.in_proj_weight = nn.Parameter(arange2d(embed_dim, embed_dim*3) * 0.1)
+multihead_attn.out_proj.weight = nn.Parameter(arange2d(embed_dim, embed_dim) * 0.1)
+
+source_text = tensor([
+    [0.1, 0.2, 0.3, 0.4],
+    [0.5, 0.6, 0.7, 0.8],
+    ])
+target_text = tensor([
+    [0.9, 1.0, 1.1, 1.2],
+    [1.3, 1.4, 1.5, 1.6],
+    ])
+
+query = source_text
+key = value = target_text
+
+attn_output, _ = multihead_attn(query, key, value)
+
+attn_output # tensor([[ 24.5519,  61.8296,  99.1073, 136.3850],
+            #         [ 24.6951,  62.3463,  99.9974, 137.6486]])
+
+attn_mask = tensor([[0, -torch.inf], [0, -torch.inf]])
+attn_output, _ = multihead_attn(query, key, value, attn_mask=attn_mask)
+
+attn_output # tensor([[17.9000, 45.1960, 72.4920, 99.7880],
+            #         [17.9000, 45.1960, 72.4920, 99.7880]])
+</pre>
+
+
+</body>
+</html>

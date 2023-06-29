@@ -1,0 +1,278 @@
+body
+{
+	font-family: Arial, Helvetica, sans-serif;
+	font-size: 14px;
+}
+table, tr, td
+{
+	border: none;
+	padding: 0px;
+	margin: 0px;
+	border-spacing: 0px;
+}
+td
+{
+	vertical-align: bottom;
+	position: relative;
+	font-size: 0px;
+	white-space: nowrap;
+	text-align: center;
+}
+.centered
+{
+	text-align: center;
+}
+hr
+{
+	border: 0px solid #fff;
+	border-top: 1px solid #ccc;
+}
+pre
+{
+	font-size: 12px;
+}
+a-title
+{
+	display: block;
+	font-size: 21px;
+	text-align: left;
+}
+a-pack, in-mid, width-1, width-2, width-3, width-4, width-5, width-6, width-7, width-8, width-16, width-24, width-32
+{
+	display: inline-block;
+}
+height-1, height-2, height-3, height-4, height-5, height-6, height-7, height-8, height-16, height-24, height-32
+{
+	display: block;
+}
+in-mid
+{
+	text-align: center;
+}
+width-1 { width: 6px; }
+width-2 { width: 12px; }
+width-3 { width: 18px; }
+width-4 { width: 24px; }
+width-5 { width: 30px; }
+width-6 { width: 36px; }
+width-7 { width: 42px; }
+width-8 { width: 48px; }
+width-16 { width: 96px; }
+width-24 { width: 144px; }
+width-32 { width: 192px; }
+height-1 { height: 6px; }
+height-2 { height: 12px; }
+height-3 { height: 18px; }
+height-4 { height: 24px; }
+height-5 { height: 30px; }
+height-6 { height: 36px; }
+height-7 { height: 42px; }
+height-8 { height: 48px; }
+height-16 { height: 96px; }
+height-24 { height: 144px; }
+height-32 { height: 192px; }
+a-row, a-cell
+{
+	display: block;
+	font-size: 0px;
+	text-align: center;
+	white-space: nowrap;
+}
+a-column
+{
+	display: inline-block;
+}
+span
+{
+	text-align: left;
+	white-space: normal;
+}
+a-run, a-text, a-label, mid-text, op-text
+{
+	font-size: 12px;
+	text-align: left;
+	white-space: normal;
+}
+a-run, op-text
+{
+	display: inline-block;
+}
+op-text
+{
+	font-size: 18px;
+}
+faint-span
+{
+	display: inline;
+	color: #777;
+}
+a-text, mid-text
+{
+	display: block;
+}
+mid-text
+{
+	text-align: center;
+}
+a-label
+{
+	display: block;
+	padding-left: 3px;
+	padding-top: 3px;
+	text-align: center;
+}
+a-box
+{
+	display: inline-block;
+	border: 1px solid #ccc;
+	border-radius: 8px;
+	padding: 5px 5px 5px 5px;
+	position: relative;
+}
+tensor-value
+{
+	width: 10px;
+	height: 10px;
+	display: inline-block;
+	border: 2px solid #666;
+	border-radius: 50%;
+	margin: 2px;
+}
+tensor-hat
+{
+	display: inline-block;
+	padding: 3px 3px 0px 3px;
+	position: relative;
+	margin: 3px;
+}
+tensor-hat::before
+{
+	content: '';
+	border-top: 1px solid #aaa;
+	border-left: 1px solid #aaa;
+	border-right: 1px solid #aaa;
+	border-top-left-radius: 5px;
+	border-top-right-radius: 5px;
+	position: absolute;
+	top: 0;
+	bottom: 25%;
+	left: 0;
+	right: 0;
+	z-index: -999;
+}
+ghost-hat
+{
+	display: inline-block;
+	padding: 3px 3px 0px 3px;
+	position: relative;
+	margin: 3px;
+}
+ghost-hat::before
+{
+	content: '';
+	border-top: 1px dotted #aaa;
+	border-left: 1px dotted #aaa;
+	border-right: 1px dotted #aaa;
+	border-top-left-radius: 5px;
+	border-top-right-radius: 5px;
+	position: absolute;
+	top: 0;
+	bottom: 25%;
+	left: 0;
+	right: 0;
+	z-index: -999;
+}
+tensor-dim
+{
+	display: inline-block;
+}
+math-op
+{
+	display: inline-block;
+	font-size: 18px;
+	border: 1px solid #888;
+	border-radius: 20%;
+	padding: 0px 5px;
+	margin: 3px;
+	font-weight: bold;
+}
+ghost-op
+{
+	display: inline-block;
+	font-size: 18px;
+	border: 1px dotted #888;
+	border-radius: 20%;
+	padding: 0px 5px;
+	margin: 3px;
+	font-weight: bold;
+}
+math-sum
+{
+	color: #0a0;
+	display: inline-block;
+	padding-bottom: 2px;
+}
+math-sum::after
+{
+	content: '🞤';
+}
+math-mul
+{
+	color: #a40;
+}
+math-mul::after
+{
+	content: '╳';
+}
+math-div
+{
+	color: #a0c;
+}
+math-div::after
+{
+	content: '／';
+}
+small-op
+{
+	vertical-align: center;
+	display: inline-block;
+	font-size: 10px;
+	border: 1px solid #888;
+	border-radius: 20%;
+	padding: 0px 2px 0px 2px;
+	margin: 2px;
+	font-weight: bold;
+}
+tiny-op
+{
+	vertical-align: center;
+	display: inline-block;
+	font-size: 7px;
+	border: 1px solid #888;
+	border-radius: 20%;
+	padding: 0px 1px 0px 1px;
+	margin: 0px 1px 0px 0px;
+	font-weight: bold;
+}
+no-op
+{
+	display: inline-block;
+}
+a-weight
+{
+	width: 5px;
+	height: 5px;
+	display: inline-block;
+	border: 1px solid #48f;
+	background-color: #48f;
+	border-radius: 50%;
+	margin: 2px;
+}
+a-connection
+{
+	display: hidden;
+}
+an-overlay
+{
+	position: absolute;
+}

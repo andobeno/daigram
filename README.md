@@ -6,9 +6,9 @@ Visual diagrams of AI components
 
 WIP
 
-## Web site
+## Diagrams
 
-* [Open web site](https://andobeno.github.io/daigram/)
+* [Multihead Attention](https://andobeno.github.io/daigram/multihead_attention.html)
 
 ## License
 
