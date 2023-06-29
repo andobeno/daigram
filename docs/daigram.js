@@ -3,7 +3,7 @@ var selectorsArray = selectors.split(',');
 var processedElements = new Set();
 var linesUpstream = new Map();
 var linesDownstream = new Map();
-var mouseChanges = []; //new Map();
+var mouseChanges = [];
 var currentMouseElement = null;
 var currentMouseElementCounter = 0;
 
@@ -63,7 +63,6 @@ function registerMouseEvents(mouseElement)
 	processedElements.add(mouseElement);
 
 	mouseElement.addEventListener("mouseenter", () => {
-		//handleMouseLeave(mouseElement);
 		currentMouseElementCounter++;
 		handleMouseEnter(mouseElement, currentMouseElementCounter, 0);
 		});
@@ -79,16 +78,13 @@ function handleMouseEnter(element, counter, depth)
 	{
 		handleMouseLeave();
 		currentMouseElement = element;
-		//mouseChanges.clear();
 	}
 	else if(currentMouseElement !== element || currentMouseElementCounter != counter)
 	{
 		return;
 	}
 
-	var changes = mouseChanges; //.has(element) ? mouseChanges.get(element) : [];
-	//mouseChanges.set(element, changes);
-
+	var changes = mouseChanges;
 	if(changes.length == 0 && depth != 0)
 	{
 		return;
@@ -242,9 +238,8 @@ function handleMouseEnter(element, counter, depth)
 
 function handleMouseLeave(element)
 {
-	var changes = mouseChanges; //.get(element);
+	var changes = mouseChanges;
 	currentMouseElement = null;
-	//mouseChanges.delete(element);
 
 	if(changes)
 	{
@@ -347,11 +342,7 @@ function connect(from, to, options)
 			endSocket: options.end ?? 'top',
 			startLabel: options.startLabel ? LeaderLine.captionLabel(options.startLabel, startLabelOptions) : null,
 			endLabel: options.endLabel ? LeaderLine.captionLabel(options.endLabel, endLabelOptions) : null,
-
 			dash: options.dashed ? { len: 4, gap: 4 } : false,
-
-//						startSocketGravity: 18,
-//						endSocketGravity: 18
 		}
 	);
 
@@ -474,85 +465,3 @@ window.onload = function()
 {
 	connectAll();
 };
-
-			/*
-			new LeaderLine(
-				document.getElementById('input_1_1'),
-				document.getElementById('weight_neuron1_1'),
-				{ size: 1, path: 'straight', color: '#888', startPlug: 'behind', endPlug: 'behind', startSocket: 'bottom', endSocket: 'top' }
-			);
-			new LeaderLine(
-				document.getElementById('input_1_1'),
-				document.getElementById('weight_neuron2_1'),
-				{ size: 1, path: 'straight', color: '#888', startPlug: 'behind', endPlug: 'behind', startSocket: 'bottom', endSocket: 'top' }
-			);
-
-			new LeaderLine(
-				document.getElementById('weight_neuron1_1'),
-				document.getElementById('qhead1_word1_sum_1'),
-				{ size: 1, path: 'straight', color: '#888', startPlug: 'behind', endPlug: 'behind', startSocket: 'bottom', endSocket: 'top' }
-			);
-			new LeaderLine(
-				document.getElementById('weight_neuron2_1'),
-				document.getElementById('qhead1_word1_sum_2'),
-				{ size: 1, path: 'straight', color: '#888', startPlug: 'behind', endPlug: 'behind', startSocket: 'bottom', endSocket: 'top' }
-			);
-
-
-
-			new LeaderLine(
-				document.getElementById('input_1_2'),
-				document.getElementById('weight_neuron1_2'),
-				{ size: 1, path: 'straight', color: '#888', startPlug: 'behind', endPlug: 'behind', startSocket: 'bottom', endSocket: 'top' }
-			);
-			new LeaderLine(
-				document.getElementById('input_1_2'),
-				document.getElementById('weight_neuron2_2'),
-				{ size: 1, path: 'straight', color: '#888', startPlug: 'behind', endPlug: 'behind', startSocket: 'bottom', endSocket: 'top' }
-			);
-
-			new LeaderLine(
-				document.getElementById('weight_neuron1_2'),
-				document.getElementById('qhead1_word1_sum_1'),
-				{ size: 1, path: 'straight', color: '#888', startPlug: 'behind', endPlug: 'behind', startSocket: 'bottom', endSocket: 'top' }
-			);
-			new LeaderLine(
-				document.getElementById('weight_neuron2_2'),
-				document.getElementById('qhead1_word1_sum_2'),
-				{ size: 1, path: 'straight', color: '#888', startPlug: 'behind', endPlug: 'behind', startSocket: 'bottom', endSocket: 'top' }
-			);
-			*/
-
-
-
-
-
-
-
-
-
-
-
-
-
-			/*
-			document.getElementById("myId1").style.display = 'inline';
-			document.getElementById("myId2").style.display = 'inline';
-
-			new LeaderLine(
-				LeaderLine.mouseHoverAnchor(document.getElementById('myId1'), 'draw', {style: {backgroundColor: null}}),
-				document.getElementById('myId2'),
-				{ size: 2, path: 'fluid', startSocketGravity: 40, endSocketGravity: 40 }
-			);
-
-			blueLine = new LeaderLine(
-				document.getElementById('myId1'),
-				LeaderLine.pointAnchor(document.getElementById('myId2'), {x: 10, y: 10}),
-				{ size: 2, path: 'straight', color: 'blue', startPlug: 'behind', endPlug: 'arrow3' }
-			);
-
-			blueLine.hide();
-
-			document.getElementById("myId1").onmouseenter = function(){ blueLine.show('draw'); };
-			document.getElementById("myId1").onmouseleave = function(){ blueLine.hide('draw'); };
-			*/
