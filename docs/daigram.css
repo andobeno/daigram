@@ -210,11 +210,11 @@ math-sum
 {
 	color: #0a0;
 	display: inline-block;
-	padding-bottom: 2px;
 }
 math-sum::after
 {
-	content: '🞤';
+	content: '+';
+	font-size: 1.2em;
 }
 math-mul
 {
