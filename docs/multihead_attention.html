@@ -55,6 +55,9 @@
 <hr>
 <br>
 
+<div style="position: relative;">
+<an-overlay id="loading_pane"><a-title>Loading...</a-title></an-overlay>
+<div id="page_content" style="visibility: hidden;">
 <table><tr><td>
 
 	<no-op style="position: absolute; left: 500px; top: 2px;" id="Q_head2_middle_point">
@@ -816,7 +819,7 @@
 			<a-text>
 				Scale<br>
 				<br>
-				<faint-span>Divided by the square root of the size of the input (which is the number of words in the <strong>target</strong> text = 2).</faint-span>
+				<faint-span>Divided by the square root of 2.</faint-span>
 			</a-text>
 		</an-overlay>
 
@@ -1576,7 +1579,8 @@ attn_output, _ = multihead_attn(query, key, value, attn_mask=attn_mask)
 attn_output # tensor([[17.9000, 45.1960, 72.4920, 99.7880],
             #         [17.9000, 45.1960, 72.4920, 99.7880]])
 </pre>
-
+</div>
+</div>
 
 </body>
 </html>

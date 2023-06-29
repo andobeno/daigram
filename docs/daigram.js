@@ -464,4 +464,6 @@ function connectAll()
 window.onload = function()
 {
 	connectAll();
+	document.getElementById('loading_pane').style.display = 'none';
+	document.getElementById('page_content').style.visibility = 'visible';
 };
